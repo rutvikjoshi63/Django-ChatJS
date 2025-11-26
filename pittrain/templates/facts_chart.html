@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facts Added Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #chartContainer {
+            position: relative;
+            height: 400px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PIT Airport Train Facts - Timeline</h1>
+    <div id="chartContainer">
+        <canvas id="factsChart"></canvas>
+    </div>
+
+    <script>
+        // Prepare data from Django template
+        const factsData = [
+            {% for fact in facts_by_date %}
+            {
+                date: "{{ fact.hour }}",
+                count: {{ fact.count }}
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+
+        // Extract labels and data for Chart.js
+        const labels = factsData.map(item => item.date);
+        const data = factsData.map(item => item.count);
+
+        // Create the chart
+        const ctx = document.getElementById('factsChart').getContext('2d');
+        const factsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Facts Added',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Facts'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date and Hour Added'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Facts Added Per Hour'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

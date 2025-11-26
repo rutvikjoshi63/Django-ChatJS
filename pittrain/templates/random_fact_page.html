@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random PIT Airport Train Fact</title>
+</head>
+<body>
+    {% if fact %}
+        <h1>Random Fun Fact</h1>
+        <p>{{ fact.funFact }}</p>
+        <p><strong>Rank:</strong> {{ fact.rank }}/10</p>
+        <p><small>Date added: {{ fact.dateAdded }}</small></p>
+    {% else %}
+        <p>No fun facts yet!</p>
+    {% endif %}
+</body>
+</html>
